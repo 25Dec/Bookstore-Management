@@ -1,0 +1,84 @@
+#ReportAccountsReceivablePage {
+	width: 100vw;
+	height: max-content;
+	background: #f9fbff;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	padding-bottom: 5rem;
+}
+
+#ReportAccountsReceivablePage > h1 {
+	margin: 1.5rem 0;
+	color: #bf8f60;
+	text-transform: uppercase;
+}
+
+#ReportAccountsReceivablePage > table {
+	width: 90%;
+	border-collapse: collapse;
+	box-shadow: 0 5px 10px #e1e5ee;
+	background-color: white;
+	text-align: center;
+}
+
+#ReportAccountsReceivablePage > table thead {
+	box-shadow: 0 5px 10px #e1e5ee;
+}
+
+#ReportAccountsReceivablePage > table th {
+	padding: 1rem 2rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1rem;
+	font-size: 0.7rem;
+	font-weight: 900;
+}
+
+#ReportAccountsReceivablePage > table td {
+	padding: 1rem 2rem;
+}
+
+#ReportAccountsReceivablePage table tbody tr:hover {
+	background-color: #e1e5ee;
+}
+
+#ReportAccountsReceivablePage > table .bookName {
+	color: #bf8f60;
+}
+
+#ReportAccountsReceivablePage > table .delete {
+	color: black;
+}
+
+#ReportAccountsReceivablePage > table .modify svg {
+	cursor: pointer;
+}
+
+#ReportAccountsReceivablePage table tr:nth-child(even) {
+	background-color: #f4f6fb;
+}
+
+#ReportAccountsReceivablePage #addReportAccountsReceivableIcon {
+	width: 46px;
+	height: 46px;
+	background-color: #bf8f60;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 88px;
+	right: 0;
+	border-top-left-radius: 100px;
+	border-bottom-left-radius: 100px;
+	cursor: pointer;
+}
+
+#ReportAccountsReceivablePage #addReportAccountsReceivableIcon:hover {
+	background-color: #a7a791;
+}
+
+#ReportAccountsReceivablePage div:last-child {
+	height: 25px;
+}
