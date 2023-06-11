@@ -18,11 +18,19 @@ export const useCaiDatStore = defineStore("CaiDatStore", {
 			try {
 				let res = await axios.get("http://localhost:4000/trangCaiDat/thamSo");
 
-				this.luongTonToiThieuSauKhiBan = res.data[0].LuongTonToiThieuSauKhiBan;
-				this.luongTonToiThieuTruocKhiNhap = res.data[0].LuongTonToiThieuTruocKhiNhap;
-				this.soLuongNhapToiThieu = res.data[0].SoLuongNhapToiThieu;
-				this.suDungQuiDinh = res.data[0].SuDungQuiDinh;
-				this.tienNoToiDa = res.data[0].TienNoToiDa;
+				if (res.data.length > 0) {
+					this.luongTonToiThieuSauKhiBan = res.data[0].LuongTonToiThieuSauKhiBan;
+					this.luongTonToiThieuTruocKhiNhap = res.data[0].LuongTonToiThieuTruocKhiNhap;
+					this.soLuongNhapToiThieu = res.data[0].SoLuongNhapToiThieu;
+					this.suDungQuiDinh = res.data[0].SuDungQuiDinh;
+					this.tienNoToiDa = res.data[0].TienNoToiDa;
+				} else {
+					this.luongTonToiThieuSauKhiBan = 0;
+					this.luongTonToiThieuTruocKhiNhap = 0;
+					this.soLuongNhapToiThieu = 0;
+					this.suDungQuiDinh = 0;
+					this.tienNoToiDa = 0;
+				}
 			} catch (err) {
 				console.log("Lỗi ở TrangCaiDat");
 			}

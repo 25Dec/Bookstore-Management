@@ -1,5 +1,7 @@
 <script>
 	import { ref } from "vue";
+	import { useRouter } from "vue-router";
+	import { useSachStore } from "../../stores/SachStore";
 	import { useHoaDonStore } from "../../stores/HoaDonStore";
 
 	export default {
@@ -12,8 +14,10 @@
 				return `${day}/${month}/${year}`;
 			};
 			let hoaDonStore = useHoaDonStore();
+			let sachStore = useSachStore();
 			let ThanhToan = ref(null);
 			let ngayLapHoaDon = ref(getCurrentDateTime());
+			let router = useRouter();
 
 			let toggleThanhToanPopup = (e) => {
 				if (e.target === e.currentTarget) {
@@ -27,14 +31,24 @@
 					return sach;
 				});
 
+				for (let i = 0; i < hoaDonStore.listOfSachDaChon.length; i++) {
+					for (let j = 0; j < sachStore.listOfBooks.length; j++) {
+						if (hoaDonStore.listOfSachDaChon[i].MaSach == sachStore.listOfBooks[j].MaSach) {
+							sachStore.listOfBooks[j].SoLuong =
+								sachStore.listOfBooks[j].SoLuong - hoaDonStore.listOfSachDaChon[i].soLuongMua;
+						}
+					}
+				}
+
 				let newHoaDon = {
+					MaHD: Math.floor(Math.random() * 99999) + 1,
 					HoTen: hoaDonStore.hoTenKhachHang,
 					DiaChi: hoaDonStore.diaChi,
 					DienThoai: hoaDonStore.sdt,
 					Email: hoaDonStore.email,
 					NgayLap: new Date(),
 					TongTien: hoaDonStore.tongTien,
-					soTienTra: hoaDonStore.tongTien,
+					SoTienTra: hoaDonStore.tongTien,
 					SoTienNo: 0,
 					ConLai: 0,
 					listOfSachDaChon: hoaDonStore.listOfSachDaChon,
@@ -42,12 +56,14 @@
 
 				hoaDonStore.addHoaDonThanhToan(newHoaDon);
 				hoaDonStore.displayFormThanhToan = false;
+				router.push({ name: "TrangHoaDon", replace: true });
 			};
 
 			return {
 				hoaDonStore,
 				ThanhToan,
 				ngayLapHoaDon,
+				router,
 				toggleThanhToanPopup,
 				handleSubmit,
 			};

@@ -16,7 +16,26 @@
 				thuTienStore.getListOfPhieuThuTien();
 			});
 
-			return { thuTienStore, thongBaoStore };
+			let shortenEmail = (email) => {
+				if (email.length > 28) {
+					let atIndex = email.indexOf("@");
+
+					if (atIndex > 0) {
+						let username = email.substring(0, atIndex);
+						let domain = email.substring(atIndex);
+
+						if (username.length > 5) {
+							username = username.substring(0, 5) + "...";
+						}
+
+						return username + domain;
+					}
+					return email;
+				}
+				return email;
+			};
+
+			return { thuTienStore, thongBaoStore, shortenEmail };
 		},
 	};
 </script>
@@ -55,7 +74,7 @@
 					<td class="no">{{ index + 1 }}</td>
 					<td class="hoTenKhachHang">{{ phieuThuTien.HoTen }}</td>
 					<td class="diaChi">{{ phieuThuTien.DiaChi }}</td>
-					<td class="email">{{ phieuThuTien.Email }}</td>
+					<td class="email">{{ shortenEmail(phieuThuTien.Email) }}</td>
 					<td class="sdt">{{ phieuThuTien.DienThoai }}</td>
 					<td class="tongNo">
 						{{ phieuThuTien.TongTien.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}

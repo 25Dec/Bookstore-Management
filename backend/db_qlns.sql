@@ -5,7 +5,7 @@ use DB_QLNS;
 SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 create table SACH(
-	MaSach int primary key auto_increment,
+	MaSach int primary key,
     TenSach varchar(200),
     DonGia double(20,1),
     SoLuong int,
@@ -14,12 +14,12 @@ create table SACH(
 );
 
 create table TACGIA(
-	MaTG int primary key auto_increment,
+	MaTG int primary key,
     TenTG varchar(200)
 );
 
 create table THELOAI(
-	MaTL int primary key auto_increment,
+	MaTL int primary key,
     TenTL varchar(200)
 );
 
@@ -272,8 +272,8 @@ create table THAMSO(
 --        (1500, 170, 1670, 10, 5);
 
 -- Dữ liệu bảng THAMSO
--- INSERT INTO THAMSO VALUES 
--- (150, 300, 20000, 20, true);
+INSERT INTO THAMSO VALUES 
+(150, 300, 20000, 20, true);
 
 -- Add foreign keys for table SACH
 ALTER TABLE SACH ADD CONSTRAINT FK_SACH_TACGIA

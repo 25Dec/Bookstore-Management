@@ -36,7 +36,8 @@ export const useThuTienStore = defineStore("ThuTienStore", {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
 			this.listOfPhieuThuTien = this.listOfPhieuThuTien.map((phieuThuTien) => {
-				if (phieuThuTien.maPhieuThuTien == ptt.maPhieuThuTien) {
+				if (phieuThuTien.MaPhieuThuTien == ptt.MaPhieuThuTien) {
+					console.log(phieuThuTien);
 					phieuThuTien.SoTienDaThu = ptt.SoTienDaThu;
 					phieuThuTien.ConLai = ptt.ConLai;
 				}

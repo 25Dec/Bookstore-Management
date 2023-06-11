@@ -37,6 +37,7 @@
 					}
 					return sachHienCo;
 				});
+
 				hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachHienCo.filter((sachHienCo) => {
 					return sachHienCo.soLuongMua > 0;
 				});
@@ -91,15 +92,30 @@
 						thongBaoStore.status = "warning";
 						thongBaoStore.message = "Vui lòng chọn ít nhất 1 cuốn sách!";
 					} else {
-						hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
-						hoaDonStore.tongTien = 0;
-
-						hoaDonStore.listOfSachDaChon.forEach((sach) => {
-							hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
-							hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+						let book = hoaDonStore.listOfSachDaChon.find((book) => {
+							if (book.soLuongMua > book.SoLuong) return book;
 						});
 
-						hoaDonStore.displayFormThanhToan = true;
+						if (book != undefined) {
+							thongBaoStore.display = true;
+							thongBaoStore.status = "warning";
+							thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+						} else {
+							hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
+							hoaDonStore.tongTien = 0;
+
+							hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
+								sachDaChon.SoLuong -= sachDaChon.soLuongMua;
+								return sachDaChon;
+							});
+
+							hoaDonStore.listOfSachDaChon.forEach((sach) => {
+								hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
+								hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+							});
+
+							hoaDonStore.displayFormThanhToan = true;
+						}
 					}
 				}
 			};
@@ -133,15 +149,25 @@
 						thongBaoStore.status = "warning";
 						thongBaoStore.message = "Vui lòng chọn ít nhất 1 cuốn sách!";
 					} else {
-						hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
-						hoaDonStore.tongTien = 0;
-
-						hoaDonStore.listOfSachDaChon.forEach((sach) => {
-							hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
-							hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+						let book = hoaDonStore.listOfSachDaChon.find((book) => {
+							if (book.soLuongMua > book.SoLuong) return book;
 						});
 
-						hoaDonStore.displayFormGhiNo = true;
+						if (book != undefined) {
+							thongBaoStore.display = true;
+							thongBaoStore.status = "warning";
+							thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+						} else {
+							hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
+							hoaDonStore.tongTien = 0;
+
+							hoaDonStore.listOfSachDaChon.forEach((sach) => {
+								hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
+								hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+							});
+
+							hoaDonStore.displayFormGhiNo = true;
+						}
 					}
 				}
 			};
@@ -327,12 +353,7 @@
 					<td class="authorName">{{ book.TenTG }}</td>
 					<td class="price">{{ book.DonGia.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
 					<td class="quantityBought">
-						<input
-							type="number"
-							min="0"
-							:value="book.soLuongMua"
-							readonly
-						/>
+						{{ book.soLuongMua }}
 					</td>
 				</tr>
 			</tbody>
@@ -387,8 +408,10 @@
 					<td class="price">{{ book.DonGia.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
 					<td class="quantityBought">
 						<input
+							v-if="book.SoLuong > 0"
 							type="number"
 							min="0"
+							:max="book.SoLuong"
 							@change="handleSoLuongMuaTrongCacSachHienCo($event, book.MaSach)"
 						/>
 					</td>

@@ -13,7 +13,8 @@
 			let tenSachFromInputTag = ref("");
 			let tenSachFromSelectTag = ref("");
 			let tenTacGia = ref("");
-			let theLoai = ref("");
+			let theLoaiFromInputTag = ref("");
+			let theLoaiFromSelectTag = ref("");
 			let soLuong = ref("");
 			let donGia = ref("");
 
@@ -54,23 +55,38 @@
 				tenSachFromInputTag.value = "";
 				tenSachFromSelectTag.value = "";
 				tenTacGia.value = "";
-				theLoai.value = "";
+				theLoaiFromInputTag.value = "";
+				theLoaiFromSelectTag.value = "";
 				soLuong.value = "";
 				donGia.value = "";
 			};
 
 			let handleSubmit = () => {
 				let isDuplicated = false;
+				let book = {};
 
 				if (tenSachFromSelectTag.value == "") {
-					let book = {
-						TenSach: tenSachFromInputTag.value,
-						TenTG: tenTacGia.value,
-						TenTL: theLoai.value,
-						SoLuong: soLuong.value,
-						DonGia: donGia.value,
-						NgayNhapSach: new Date(),
-					};
+					if (theLoaiFromSelectTag.value == "") {
+						book = {
+							MaSach: Math.floor(Math.random() * 99999) + 1,
+							TenSach: tenSachFromInputTag.value,
+							TenTG: tenTacGia.value,
+							TenTL: theLoaiFromInputTag.value,
+							SoLuong: soLuong.value,
+							DonGia: donGia.value,
+							NgayNhapSach: new Date(),
+						};
+					} else {
+						book = {
+							MaSach: Math.floor(Math.random() * 99999) + 1,
+							TenSach: tenSachFromInputTag.value,
+							TenTG: tenTacGia.value,
+							TenTL: theLoaiFromSelectTag.value,
+							SoLuong: soLuong.value,
+							DonGia: donGia.value,
+							NgayNhapSach: new Date(),
+						};
+					}
 
 					sachStore.listOfBooks.forEach((sach) => {
 						if (book.TenSach == sach.TenSach && book.TenTG == sach.TenTG) isDuplicated = true;
@@ -85,7 +101,8 @@
 						afterSubmitForm();
 					}
 				} else {
-					let book = {
+					book = {
+						MaSach: Math.floor(Math.random() * 99999) + 1,
 						TenSach: sachStore.detailPerBook.TenSach,
 						TenTG: sachStore.detailPerBook.TenTG,
 						TenTL: sachStore.detailPerBook.TenTL,
@@ -106,7 +123,8 @@
 				tenSachFromInputTag,
 				tenSachFromSelectTag,
 				tenTacGia,
-				theLoai,
+				theLoaiFromInputTag,
+				theLoaiFromSelectTag,
 				soLuong,
 				donGia,
 				errOfSoLuongNhap,
@@ -177,20 +195,16 @@
 					v-model.trim="tenTacGia"
 				/>
 			</div>
-			<div v-if="tenSachFromSelectTag == ''">
-				<label for="selectTheLoai">Thể loại</label>
+			<div>
+				<label for="theLoai">Thể loại</label>
 				<select
-					name="selectTheLoai"
-					id="selectTheLoai"
+					name="theLoai"
+					id="theLoai"
 					required
-					v-model.trim="theLoai"
+					v-model.trim="theLoaiFromSelectTag"
 				>
-					<option
-						disabled
-						value=""
-					>
-						Chọn thể loại
-					</option>
+					<option disabled>Chọn thể loại</option>
+					<option value="">Khác</option>
 					<option
 						v-for="category in sachStore.listOfCategories"
 						:key="category.MaTL"
@@ -198,6 +212,15 @@
 						{{ category.TenTL }}
 					</option>
 				</select>
+				<input
+					v-if="theLoaiFromSelectTag == ''"
+					id="theLoai"
+					required
+					type="text"
+					name="theLoai"
+					placeholder="Nhập tên thể loại"
+					v-model.trim="theLoaiFromInputTag"
+				/>
 			</div>
 			<div>
 				<label for="inputSoLuong">Số lượng</label>

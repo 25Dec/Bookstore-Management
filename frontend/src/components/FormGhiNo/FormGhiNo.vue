@@ -1,5 +1,6 @@
 <script>
 	import { ref } from "vue";
+	import { useRouter } from "vue-router";
 	import { useHoaDonStore } from "../../stores/HoaDonStore";
 
 	export default {
@@ -14,6 +15,7 @@
 			let hoaDonStore = useHoaDonStore();
 			let GhiNo = ref(null);
 			let ngayLapHoaDon = ref(getCurrentDateTime());
+			let router = useRouter();
 
 			let toggleGhiNoPopup = (e) => {
 				if (e.target === e.currentTarget) {
@@ -28,13 +30,14 @@
 				});
 
 				let newHoaDon = {
+					MaHD: Math.floor(Math.random() * 99999) + 1,
 					HoTen: hoaDonStore.hoTenKhachHang,
 					DiaChi: hoaDonStore.diaChi,
 					DienThoai: hoaDonStore.sdt,
 					Email: hoaDonStore.email,
 					NgayLap: new Date(),
 					TongTien: hoaDonStore.tongTien,
-					soTienTra: 0,
+					SoTienTra: 0,
 					SoTienNo: hoaDonStore.tongTien,
 					ConLai: hoaDonStore.tongTien,
 					listOfSachDaChon: hoaDonStore.listOfSachDaChon,
@@ -42,12 +45,14 @@
 
 				hoaDonStore.addHoaDonGhiNo(newHoaDon);
 				hoaDonStore.displayFormGhiNo = false;
+				router.push({ name: "TrangHoaDon", replace: true });
 			};
 
 			return {
 				hoaDonStore,
 				GhiNo,
 				ngayLapHoaDon,
+				router,
 				toggleGhiNoPopup,
 				handleSubmit,
 			};

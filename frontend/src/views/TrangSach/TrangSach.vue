@@ -88,6 +88,7 @@
 									sachStore.bookID = book.MaSach;
 									sachStore.displayEditForm = true;
 									sachStore.getBookDetail();
+									sachStore.getListOfCategories();
 								}
 							"
 						>

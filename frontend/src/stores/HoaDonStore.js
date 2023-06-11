@@ -46,6 +46,7 @@ export const useHoaDonStore = defineStore("HoaDonStore", {
 		async addHoaDonThanhToan(hd) {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
+			this.listOfHoaDon.push(hd);
 			try {
 				axios.post("http://localhost:4000/trangHoaDon/danhSachHoaDon/addHoaDonThanhToan", hd);
 				thongBaoStore.display = true;
@@ -62,6 +63,7 @@ export const useHoaDonStore = defineStore("HoaDonStore", {
 		async addHoaDonGhiNo(hd) {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
+			this.listOfHoaDon.push(hd);
 			try {
 				axios.post("http://localhost:4000/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", hd);
 				thongBaoStore.display = true;

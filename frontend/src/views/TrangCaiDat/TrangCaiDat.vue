@@ -54,7 +54,7 @@
 
 <template>
 	<Spinner
-		v-if="caiDatStore.luongTonToiThieuSauKhiBan == 0"
+		v-if="caiDatStore.loading"
 		message="Đang thực thi. Vui lòng đợi!"
 	/>
 	<div
