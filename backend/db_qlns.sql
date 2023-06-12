@@ -2,7 +2,7 @@ create database DB_QLNS;
 
 use DB_QLNS;
 
-SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+-- SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 create table SACH(
 	MaSach int primary key,
@@ -25,7 +25,7 @@ create table THELOAI(
 
 create table PHIEUNHAPSACH(
 	MaPhieuNhapSach int primary key auto_increment,
-    NgayNhapSach date
+    NgayNhapSach datetime
 );
 
 create table CT_PHIEUNHAP(
@@ -56,7 +56,7 @@ create table CT_HOADON(
 
 create table PHIEUTHUTIEN(
 	MaPhieuThuTien int primary key auto_increment,
-    NgayThuTien date,
+    NgayThuTien datetime,
     TongTien double(20,1),
     SoTienDaThu double(20,1),
     ConLai double(20,1),

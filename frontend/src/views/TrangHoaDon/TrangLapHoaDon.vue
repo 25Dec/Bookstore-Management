@@ -161,6 +161,11 @@
 							hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
 							hoaDonStore.tongTien = 0;
 
+							hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
+								sachDaChon.SoLuong -= sachDaChon.soLuongMua;
+								return sachDaChon;
+							});
+
 							hoaDonStore.listOfSachDaChon.forEach((sach) => {
 								hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
 								hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);

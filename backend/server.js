@@ -198,7 +198,7 @@ app.post("/trangSach/books/addPhieuNhapSach", (req, res) => {
 				}
 				// Thêm thông tin phiếu nhập sách vào bảng PHIEUNHAPSACH
 				let MaPhieuNhapSach = Math.floor(Math.random() * 99999) + 1;
-				const insertPhieuNhapSach = `INSERT INTO PHIEUNHAPSACH (MaPhieuNhapSach, NgayNhapSach) VALUES (${MaPhieuNhapSach},CURRENT_DATE())`;
+				const insertPhieuNhapSach = `INSERT INTO PHIEUNHAPSACH (MaPhieuNhapSach, NgayNhapSach) VALUES (${MaPhieuNhapSach}, CURRENT_TIMESTAMP())`;
 				db.query(insertPhieuNhapSach, (err) => {
 					if (err) {
 						console.error("Lỗi thêm phiếu nhập sách: " + err);
@@ -378,7 +378,7 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonThanhToan", (req, res) => {
 				maKhachHang = result.insertId;
 
 				// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_DATE(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${maKhachHang})`;
+				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${maKhachHang})`;
 				db.query(insertHoaDon, (err, result) => {
 					if (err) {
 						console.error("Lỗi chèn thông tin hóa đơn:", err);
@@ -451,12 +451,24 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 				maKhachHang = result.insertId;
 
 				// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_DATE(),${TongTien},${SoTienTra},${ConLai}, ${maKhachHang})`;
+				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(),${TongTien},${SoTienTra},${ConLai}, ${maKhachHang})`;
 				db.query(insertHoaDon, (err, result) => {
 					if (err) {
 						console.error("Lỗi chèn thông tin hóa đơn:", err);
 						return;
 					}
+
+					// cập nhật lượng tồn của mỗi sách
+					const updateLuongTonMoiSach = listOfSachDaChon.map((sach) => {
+						return `UPDATE SACH SET SoLuong = ${sach.SoLuong} where MaSach = ${sach.MaSach};`;
+					});
+
+					db.query(updateLuongTonMoiSach.toString(), (err, result) => {
+						if (err) {
+							console.error("Lỗi cập nhật số lượng tồn mỗi sách thất bại:", err);
+							return;
+						}
+					});
 
 					// Chèn chi tiết hóa đơn
 					const chiTietHoaDon = listOfSachDaChon.map((sach) => {
@@ -464,7 +476,7 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 							MaHD,
 							MaCTHD: sach.MaCTHD,
 							DonGiaBan: sach.DonGia,
-							SoLuong: sach.soLuongMua,
+							SoLuongMua: sach.soLuongMua,
 							MaSach: sach.MaSach,
 						};
 						return obj;
@@ -479,7 +491,7 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 								return;
 							}
 
-							const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_DATE(),${TongTien}, ${SoTienTra},${ConLai}, ${maKhachHang})`;
+							const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_TIMESTAMP(),${TongTien}, ${SoTienTra},${ConLai}, ${maKhachHang})`;
 							db.query(insertPhieuThuTien, (err, result) => {
 								if (err) {
 									console.error("Lỗi thêm phiếu thu tiền nợ: " + err);
@@ -574,7 +586,7 @@ app.get("/trangBaoCaoTon/chiTietBaoCaoTon/:id", (req, res) => {
 	const MaBCT = req.params.id;
 	const Thang = req.query.thang;
 	const Nam = req.query.nam;
-	const chiTietBaoCaoTon = `select TenSach, TonDau, PhatSinh, DaBan, TonCuoi from SACH, BAOCAOTON, CT_BAOCAOTON where BAOCAOTON.MaBCT = CT_BAOCAOTON.MaBCT and SACH.MaSach = CT_BAOCAOTON.MaSach and BAOCAOTON.MaBCT = ${MaBCT} and Thang = ${Thang} and Nam = ${Nam}`;
+	const chiTietBaoCaoTon = `SELECT S.TenSach AS TenSach, IFNULL(TonDau, 0) AS TonDau, IFNULL(PhatSinh, 0) AS PhatSinh, IFNULL(DaBan, 0) AS DaBan, IFNULL(TonDau, 0) + IFNULL(PhatSinh, 0) - IFNULL(DaBan, 0) AS TonCuoi FROM SACH S INNER JOIN TACGIA TG ON S.MaTG = TG.MaTG LEFT JOIN (SELECT TonDau.TenSach, SUM(CASE WHEN MONTH(TonDau.NgayNhapSach) = ${Thang} AND YEAR(TonDau.NgayNhapSach) = ${Nam} THEN TonDau.SoLuong ELSE 0 END) AS TonDau FROM (SELECT PNS.MaPhieuNhapSach, MaCTPN, S.MaSach, TenSach, NgayNhapSach, DonGiaNhap, CTPN.SoLuong FROM PHIEUNHAPSACH PNS, CT_PHIEUNHAP CTPN, SACH S WHERE  PNS.MaPhieuNhapSach = CTPN.MaPhieuNhapSach AND S.MaSach = CTPN.MaSach ORDER BY NgayNhapSach ASC LIMIT 1 ) as TonDau) AS TON_NHAP ON S.TenSach = TON_NHAP.TenSach LEFT JOIN (SELECT PhatSinh.TenSach, SUM(CASE WHEN MONTH(PhatSinh.NgayNhapSach) = ${Thang} AND YEAR(PhatSinh.NgayNhapSach) = ${Nam} THEN PhatSinh.SoLuong ELSE 0 END) AS PhatSinh FROM (SELECT PNS.MaPhieuNhapSach, MaCTPN, S.MaSach, TenSach, NgayNhapSach, DonGiaNhap, CTPN.SoLuong FROM  PHIEUNHAPSACH PNS, CT_PHIEUNHAP CTPN, SACH S WHERE PNS.MaPhieuNhapSach = CTPN.MaPhieuNhapSach AND S.MaSach = CTPN.MaSach ORDER BY NgayNhapSach ASC LIMIT 1, 100000) as PhatSinh ) as PHAT_SINH ON S.TenSach = PHAT_SINH.TenSach LEFT JOIN (SELECT CTHD.MaSach, S.TenSach, SUM(CASE WHEN MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} THEN CTHD.SoLuong ELSE 0 END) AS DaBan FROM CT_HOADON CTHD, HOADON HD, SACH S WHERE CTHD.MaHD = HD.MaHD AND CTHD.MaSach = S.MaSach AND MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} GROUP BY CTHD.MaSach ) AS TON_BAN ON S.TenSach = TON_BAN.TenSach GROUP BY S.TenSach, TG.TenTG`;
 	try {
 		db.query(chiTietBaoCaoTon, (err, result) => {
 			if (err) {
@@ -596,7 +608,7 @@ app.post("/trangBaoCaoTon/danhSachBaoCaoTon", (req, res) => {
 			console.error("Lỗi thêm báo cáo tồn: " + err);
 			return;
 		}
-		const insertCTBCT = `INSERT INTO CT_BAOCAOTON (TonDau, PhatSinh, DaBan, TonCuoi, MaSach, MaBCT) SELECT SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) AS TonDau, SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) AS PhatSinh, SUM(CASE WHEN MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} THEN CTHD.SoLuong ELSE 0 END) AS DaBan, SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) + SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) - SUM(CASE WHEN MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} THEN CTHD.SoLuong ELSE 0 END) AS TonCuoi, S.MaSach AS MaSach, BCT.MaBCT AS MaBCT FROM  SACH S LEFT JOIN CT_PHIEUNHAP CT_PN ON CT_PN.MaSach = S.MaSach LEFT JOIN PHIEUNHAPSACH PNS ON CT_PN.MaPhieuNhapSach = PNS.MaPhieuNhapSach LEFT JOIN CT_HOADON CTHD ON CTHD.MaSach = S.MaSach LEFT JOIN HOADON HD ON CTHD.MaHD = HD.MaHD CROSS JOIN BAOCAOTON BCT WHERE BCT.Thang = ${Thang} AND BCT.Nam = ${Nam} AND BCT.MaBCT = ${MaBCT} GROUP BY S.MaSach, BCT.MaBCT;`;
+		const insertCTBCT = `INSERT INTO CT_BAOCAOTON (TonDau, PhatSinh, DaBan, TonCuoi, MaSach, MaBCT) SELECT SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) AS TonDau, SUM(CASE WHEN DAY(PNS.NgayNhapSach) > DAY(PNS.NgayNhapSach) AND MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) AS PhatSinh, SUM(CASE WHEN MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} THEN CTHD.SoLuong ELSE 0 END) AS DaBan, SUM(CASE WHEN MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) + SUM(CASE WHEN DAY(PNS.NgayNhapSach) > DAY(PNS.NgayNhapSach) AND MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} THEN CT_PN.SoLuong ELSE 0 END) - SUM(CASE WHEN MONTH(HD.NgayLap) = ${Thang} AND YEAR(HD.NgayLap) = ${Nam} THEN CTHD.SoLuong ELSE 0 END) AS TonCuoi, S.MaSach AS MaSach, BCT.MaBCT AS MaBCT FROM SACH S LEFT JOIN CT_PHIEUNHAP CT_PN ON CT_PN.MaSach = S.MaSach LEFT JOIN PHIEUNHAPSACH PNS ON CT_PN.MaPhieuNhapSach = PNS.MaPhieuNhapSach LEFT JOIN CT_HOADON CTHD ON CTHD.MaSach = S.MaSach LEFT JOIN HOADON HD ON CTHD.MaHD = HD.MaHD CROSS JOIN BAOCAOTON BCT WHERE BCT.Thang = ${Thang} AND BCT.Nam = ${Nam} AND MONTH(PNS.NgayNhapSach) = ${Thang} AND YEAR(PNS.NgayNhapSach) = ${Nam} GROUP BY S.MaSach, BCT.MaBCT`;
 		db.query(insertCTBCT, (err, result) => {
 			if (err) {
 				console.error("Lỗi thêm chi tiết báo cáo tồn: " + err);

@@ -35,7 +35,6 @@ export const useSachStore = defineStore("SachStore", {
 			this.loading = false;
 		},
 		async getBookDetail() {
-			this.loading = true;
 			try {
 				if (this.bookID != "") {
 					let res = await axios.get(`http://localhost:4000/trangSach/books/${this.bookID}`);
@@ -44,7 +43,6 @@ export const useSachStore = defineStore("SachStore", {
 			} catch (err) {
 				console.log("Lỗi ở TrangSach");
 			}
-			this.loading = false;
 		},
 		async addBook(book) {
 			let thongBaoStore = useThongBaoStore();
