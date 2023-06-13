@@ -376,53 +376,52 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonThanhToan", (req, res) => {
 					return;
 				}
 				maKhachHang = result.insertId;
-
-				// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${maKhachHang})`;
-				db.query(insertHoaDon, (err, result) => {
-					if (err) {
-						console.error("Lỗi chèn thông tin hóa đơn:", err);
-						return;
-					}
-
-					// cập nhật lượng tồn của mỗi sách
-					const updateLuongTonMoiSach = listOfSachDaChon.map((sach) => {
-						return `UPDATE SACH SET SoLuong = ${sach.SoLuong} where MaSach = ${sach.MaSach};`;
-					});
-
-					db.query(updateLuongTonMoiSach.toString(), (err, result) => {
-						if (err) {
-							console.error("Lỗi cập nhật số lượng tồn mỗi sách thất bại:", err);
-							return;
-						}
-					});
-
-					// Chèn chi tiết hóa đơn
-					const chiTietHoaDon = listOfSachDaChon.map((sach) => {
-						let obj = {
-							MaHD,
-							MaCTHD: sach.MaCTHD,
-							DonGiaBan: sach.DonGia,
-							SoLuongMua: sach.soLuongMua,
-							MaSach: sach.MaSach,
-						};
-						return obj;
-					});
-
-					db.query(
-						"INSERT INTO CT_HOADON (MaHD, MaCTHD, DonGiaBan, SoLuong, MaSach) VALUES ?",
-						[chiTietHoaDon.map((item) => Object.values(item))],
-						(err, result) => {
-							if (err) {
-								console.error("Lỗi chèn chi tiết hóa đơn:", err);
-								return;
-							}
-							res.send("Đã thêm hóa đơn và thông tin liên quan thành công!");
-						}
-					);
-				});
 			});
 		}
+		// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
+		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${maKhachHang})`;
+		db.query(insertHoaDon, (err, result) => {
+			if (err) {
+				console.error("Lỗi chèn thông tin hóa đơn:", err);
+				return;
+			}
+
+			// cập nhật lượng tồn của mỗi sách
+			listOfSachDaChon.forEach((sach) => {
+				let sql = `UPDATE SACH SET SoLuong = ${sach.SoLuong} where MaSach = ${sach.MaSach};`;
+
+				db.query(sql, (err, result) => {
+					if (err) {
+						console.error("Lỗi cập nhật số lượng tồn mỗi sách thất bại:", err);
+						return;
+					}
+				});
+			});
+
+			// Chèn chi tiết hóa đơn
+			const chiTietHoaDon = listOfSachDaChon.map((sach) => {
+				let obj = {
+					MaHD,
+					MaCTHD: sach.MaCTHD,
+					DonGiaBan: sach.DonGia,
+					SoLuongMua: sach.soLuongMua,
+					MaSach: sach.MaSach,
+				};
+				return obj;
+			});
+
+			db.query(
+				"INSERT INTO CT_HOADON (MaHD, MaCTHD, DonGiaBan, SoLuong, MaSach) VALUES ?",
+				[chiTietHoaDon.map((item) => Object.values(item))],
+				(err, result) => {
+					if (err) {
+						console.error("Lỗi chèn chi tiết hóa đơn:", err);
+						return;
+					}
+					res.send("Đã thêm hóa đơn và thông tin liên quan thành công!");
+				}
+			);
+		});
 	});
 });
 
@@ -449,62 +448,62 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 					return;
 				}
 				maKhachHang = result.insertId;
+			});
+		}
 
-				// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-				const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(),${TongTien},${SoTienTra},${ConLai}, ${maKhachHang})`;
-				db.query(insertHoaDon, (err, result) => {
+		// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
+		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(),${TongTien},${SoTienTra},${ConLai}, ${maKhachHang})`;
+		db.query(insertHoaDon, (err, result) => {
+			if (err) {
+				console.error("Lỗi chèn thông tin hóa đơn:", err);
+				return;
+			}
+
+			// cập nhật lượng tồn của mỗi sách
+			listOfSachDaChon.forEach((sach) => {
+				let sql = `UPDATE SACH SET SoLuong = ${sach.SoLuong} where MaSach = ${sach.MaSach};`;
+
+				db.query(sql, (err, result) => {
 					if (err) {
-						console.error("Lỗi chèn thông tin hóa đơn:", err);
+						console.error("Lỗi cập nhật số lượng tồn mỗi sách thất bại:", err);
+						return;
+					}
+				});
+			});
+
+			// Chèn chi tiết hóa đơn
+			const chiTietHoaDon = listOfSachDaChon.map((sach) => {
+				let obj = {
+					MaHD,
+					MaCTHD: sach.MaCTHD,
+					DonGiaBan: sach.DonGia,
+					SoLuongMua: sach.soLuongMua,
+					MaSach: sach.MaSach,
+				};
+				return obj;
+			});
+
+			db.query(
+				"INSERT INTO CT_HOADON (MaHD, MaCTHD, DonGiaBan, SoLuong, MaSach) VALUES ?",
+				[chiTietHoaDon.map((item) => Object.values(item))],
+				(err, result) => {
+					if (err) {
+						console.error("Lỗi chèn chi tiết hóa đơn:", err);
 						return;
 					}
 
-					// cập nhật lượng tồn của mỗi sách
-					const updateLuongTonMoiSach = listOfSachDaChon.map((sach) => {
-						return `UPDATE SACH SET SoLuong = ${sach.SoLuong} where MaSach = ${sach.MaSach};`;
-					});
-
-					db.query(updateLuongTonMoiSach.toString(), (err, result) => {
+					const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_TIMESTAMP(),${TongTien}, ${SoTienTra},${ConLai}, ${maKhachHang})`;
+					db.query(insertPhieuThuTien, (err, result) => {
 						if (err) {
-							console.error("Lỗi cập nhật số lượng tồn mỗi sách thất bại:", err);
+							console.error("Lỗi thêm phiếu thu tiền nợ: " + err);
 							return;
 						}
 					});
 
-					// Chèn chi tiết hóa đơn
-					const chiTietHoaDon = listOfSachDaChon.map((sach) => {
-						let obj = {
-							MaHD,
-							MaCTHD: sach.MaCTHD,
-							DonGiaBan: sach.DonGia,
-							SoLuongMua: sach.soLuongMua,
-							MaSach: sach.MaSach,
-						};
-						return obj;
-					});
-
-					db.query(
-						"INSERT INTO CT_HOADON (MaHD, MaCTHD, DonGiaBan, SoLuong, MaSach) VALUES ?",
-						[chiTietHoaDon.map((item) => Object.values(item))],
-						(err, result) => {
-							if (err) {
-								console.error("Lỗi chèn chi tiết hóa đơn:", err);
-								return;
-							}
-
-							const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_TIMESTAMP(),${TongTien}, ${SoTienTra},${ConLai}, ${maKhachHang})`;
-							db.query(insertPhieuThuTien, (err, result) => {
-								if (err) {
-									console.error("Lỗi thêm phiếu thu tiền nợ: " + err);
-									return;
-								}
-							});
-
-							res.send("Đã thêm hóa đơn và thông tin liên quan thành công!");
-						}
-					);
-				});
-			});
-		}
+					res.send("Đã thêm hóa đơn và thông tin liên quan thành công!");
+				}
+			);
+		});
 	});
 });
 
@@ -644,23 +643,11 @@ app.get("/trangBaoCaoCongNo/danhSachBaoCaoCongNo", (req, res) => {
 	});
 });
 
-app.post("/trangBaoCaoCongNo/danhSachBaoCaoCongNo", (req, res) => {
-	const { MaBCCN, TenBCCN, Thang, Nam } = req.body;
-
-	const insertBCCN = `INSERT INTO BAOCAOCONGNO (MaBCCN, TenBCCN, Thang, Nam) VALUES (${MaBCCN}, '${TenBCCN}', ${Thang}, ${Nam})`;
-	db.query(insertBCCN, (err, result) => {
-		if (err) {
-			console.error("Lỗi thêm báo cáo công nợ: " + err);
-			return;
-		}
-	});
-});
-
 app.get("/trangBaoCaoCongNo/chiTietBaoCaoCongNo/:id", (req, res) => {
 	const id = req.params.id;
-	const thang = req.query.thang;
-	const nam = req.query.nam;
-	const chiTietBaoCaoCongNo = `SELECT * FROM CT_BAOCAOCONGNO, BAOCAOCONGNO, KHACHHANG WHERE CT_BAOCAOCONGNO.MaBCCN = BAOCAOCONGNO.MaBCCN  AND CT_BAOCAOCONGNO.MaKH = KHACHHANG.MaKH AND BAOCAOCONGNO.Thang = ${thang} AND BAOCAOCONGNO.Nam = ${nam}`;
+	const Thang = req.query.thang;
+	const Nam = req.query.nam;
+	const chiTietBaoCaoCongNo = `SELECT SUM(CASE WHEN HOADON.NgayLap < '2023-06-01' THEN HOADON.ConLai ELSE 0 END) AS NoDau, SUM(CASE WHEN HOADON.NgayLap >= '2023-06-01' AND HOADON.NgayLap <= '2023-06-30' THEN HOADON.ConLai ELSE 0 END) AS PhatSinh, SUM(CASE  WHEN HOADON.NgayLap <= '2023-06-30' THEN HOADON.ConLai ELSE 0 END) AS NoCuoi, KHACHHANG.MaKH, BAOCAOCONGNO.MaBCCN FROM KHACHHANG INNER JOIN HOADON ON KHACHHANG.MaKH = HOADON.MaKH CROSS JOIN BAOCAOCONGNO WHERE MONTH(HOADON.NgayLap) = ${Thang} AND YEAR(HOADON.NgayLap) = ${Nam} GROUP BY KHACHHANG.MaKH, BAOCAOCONGNO.MaBCCN;`;
 	try {
 		db.query(chiTietBaoCaoCongNo, (err, result) => {
 			if (err) {
@@ -671,6 +658,25 @@ app.get("/trangBaoCaoCongNo/chiTietBaoCaoCongNo/:id", (req, res) => {
 	} catch (e) {
 		console.log(e);
 	}
+});
+
+app.post("/trangBaoCaoCongNo/danhSachBaoCaoCongNo", (req, res) => {
+	const { MaBCCN, TenBCCN, Thang, Nam } = req.body;
+
+	const insertBCCN = `INSERT INTO BAOCAOCONGNO (MaBCCN, TenBCCN, Thang, Nam) VALUES (${MaBCCN}, '${TenBCCN}', ${Thang}, ${Nam})`;
+	db.query(insertBCCN, (err, result) => {
+		if (err) {
+			console.error("Lỗi thêm báo cáo công nợ: " + err);
+			return;
+		}
+		const insertCTBCCN = `INSERT INTO CT_BAOCAOCONGNO (NoDau, PhatSinh, NoCuoi, MaKH, MaBCCN) SELECT SUM(CASE WHEN HOADON.NgayLap < '2023-06-01' THEN HOADON.ConLai ELSE 0 END) AS NoDau, SUM(CASE WHEN HOADON.NgayLap >= '2023-06-01' AND HOADON.NgayLap <= '2023-06-30' THEN HOADON.ConLai ELSE 0 END) AS PhatSinh, SUM(CASE WHEN HOADON.NgayLap <= '2023-06-30' THEN HOADON.ConLai ELSE 0 END) AS NoCuoi,KHACHHANG.MaKH,BAOCAOCONGNO.MaBCCN FROM KHACHHANG INNER JOIN HOADON ON KHACHHANG.MaKH = HOADON.MaKH CROSS JOIN BAOCAOCONGNO WHERE MONTH(HOADON.NgayLap) = 6 AND YEAR(HOADON.NgayLap) = 2023 GROUP BY KHACHHANG.MaKH, BAOCAOCONGNO.MaBCCN;`;
+		db.query(insertCTBCCN, (err, result) => {
+			if (err) {
+				console.error("Lỗi thêm chi tiết báo cáo công nơ: " + err);
+				return;
+			}
+		});
+	});
 });
 
 app.delete("/trangBaoCaoCongNo/danhSachBaoCaoCongNo/:id", (req, res) => {

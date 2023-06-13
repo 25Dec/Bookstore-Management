@@ -19,6 +19,7 @@
 
 			let toggleGhiNoPopup = (e) => {
 				if (e.target === e.currentTarget) {
+					hoaDonStore.getListOfSachHienCo();
 					hoaDonStore.displayFormGhiNo = false;
 				}
 			};
@@ -154,7 +155,12 @@
 					</button>
 					<button
 						type="button"
-						@click="hoaDonStore.displayFormGhiNo = false"
+						@click="
+							() => {
+								hoaDonStore.getListOfSachHienCo();
+								hoaDonStore.displayFormGhiNo = false;
+							}
+						"
 					>
 						Đóng
 					</button>

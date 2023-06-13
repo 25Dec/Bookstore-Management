@@ -21,6 +21,7 @@
 
 			let toggleThanhToanPopup = (e) => {
 				if (e.target === e.currentTarget) {
+					hoaDonStore.getListOfSachHienCo();
 					hoaDonStore.displayFormThanhToan = false;
 				}
 			};
@@ -160,7 +161,12 @@
 					<button type="submit">Xác nhận</button>
 					<button
 						type="button"
-						@click="hoaDonStore.displayFormThanhToan = false"
+						@click="
+							() => {
+								hoaDonStore.getListOfSachHienCo();
+								hoaDonStore.displayFormThanhToan = false;
+							}
+						"
 					>
 						Đóng
 					</button>

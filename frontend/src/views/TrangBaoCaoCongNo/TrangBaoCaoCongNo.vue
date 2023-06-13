@@ -2,11 +2,11 @@
 	import { onMounted } from "vue";
 	import { useBaoCaoCongNoStore } from "../../stores/BaoCaoCongNoStore";
 	import FormTaoBaoCaoCongNo from "../../components/FormTaoBaoCaoCongNo/FormTaoBaoCaoCongNo.vue";
-	import FormXoaBaoCaoCongNo from "../../components/FormXoaBaoCaoCongNo/FormXoaBaoCaoCongNo.vue";
+	import FormXoaBaoCaocongNo from "../../components/FormXoaBaoCaoCongNo/FormXoaBaoCaoCongNo.vue";
 	import Spinner from "../../components/Spinner/Spinner.vue";
 
 	export default {
-		components: { Spinner, FormTaoBaoCaoCongNo, FormXoaBaoCaoCongNo },
+		components: { Spinner, FormTaoBaoCaoCongNo, FormXoaBaoCaocongNo },
 		setup() {
 			let baoCaoCongNoStore = useBaoCaoCongNoStore();
 
@@ -37,7 +37,7 @@
 				class="material-icons"
 				@click="
 					() => {
-						baoCaoCongNoStore.displayAddForm = true;
+						baoCaoCongNo.displayAddForm = true;
 					}
 				"
 			>
@@ -73,8 +73,9 @@
 									baoCaoCongNoStore.getBaoCaoCongNoDetail();
 								}
 							"
-							>{{ bccn.TenBCCN }}</RouterLink
 						>
+							{{ bccn.TenBCCN }}
+						</RouterLink>
 					</td>
 					<td class="month">{{ bccn.Thang }}</td>
 					<td class="year">{{ bccn.Nam }}</td>
@@ -98,10 +99,10 @@
 			v-if="baoCaoCongNoStore.listOfBaoCaoCongNo == 0"
 			style="margin-top: 1rem; color: #ff4069; font-weight: bold"
 		>
-			Không có dữ liệu
+			Chưa có dữ liệu
 		</p>
-		<FormTaoBaoCaoCongNo v-if="baoCaoCongNoStore.displayAddForm" />
-		<FormXoaBaoCaoCongNo v-if="baoCaoCongNoStore.displayDeleteForm" />
+		<FormTaoBaoCaoTon v-if="baoCaoCongNoStore.displayAddForm" />
+		<FormXoaBaoCaoTon v-if="baoCaoCongNoStore.displayDeleteForm" />
 	</div>
 </template>
 

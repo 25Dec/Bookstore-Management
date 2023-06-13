@@ -3,6 +3,8 @@
 	import { useRouter } from "vue-router";
 	import { useHoaDonStore } from "../../stores/HoaDonStore";
 	import { useThongBaoStore } from "../../stores/ThongBaoStore";
+	import { useCaiDatStore } from "../../stores/CaiDatStore";
+	import { useThuTienStore } from "../../stores/ThuTienStore";
 	import Spinner from "../../components/Spinner/Spinner.vue";
 	import FormThanhToan from "../../components/FormThanhToan/FormThanhToan.vue";
 	import FormGhiNo from "../../components/FormGhiNo/FormGhiNo.vue";
@@ -12,6 +14,8 @@
 		setup() {
 			let hoaDonStore = useHoaDonStore();
 			let thongBaoStore = useThongBaoStore();
+			let caiDatStore = useCaiDatStore();
+			let thuTienStore = useThuTienStore();
 			let router = useRouter();
 			let cacSachHienCo = ref([]);
 			let hoTenKhachHang = ref("");
@@ -92,29 +96,45 @@
 						thongBaoStore.status = "warning";
 						thongBaoStore.message = "Vui lòng chọn ít nhất 1 cuốn sách!";
 					} else {
-						let book = hoaDonStore.listOfSachDaChon.find((book) => {
-							if (book.soLuongMua > book.SoLuong) return book;
+						let khachNo = thuTienStore.listOfPhieuThuTien.find((ptt) => {
+							if (
+								hoTenKhachHang.value == ptt.HoTen &&
+								diaChi.value == ptt.DiaChi &&
+								sdt.value == ptt.DienThoai &&
+								email.value == ptt.Email
+							)
+								if (ptt.SoTienNo > caiDatStore.tienNoToiDa) return ptt;
 						});
 
-						if (book != undefined) {
+						if (khachNo != undefined) {
 							thongBaoStore.display = true;
 							thongBaoStore.status = "warning";
-							thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+							thongBaoStore.message = `Khách này có số tiền nợ vượt quá ${caiDatStore.tienNoToiDa}`;
 						} else {
-							hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
-							hoaDonStore.tongTien = 0;
-
-							hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
-								sachDaChon.SoLuong -= sachDaChon.soLuongMua;
-								return sachDaChon;
+							let book = hoaDonStore.listOfSachDaChon.find((book) => {
+								if (book.soLuongMua > book.SoLuong) return book;
 							});
 
-							hoaDonStore.listOfSachDaChon.forEach((sach) => {
-								hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
-								hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
-							});
+							if (book != undefined) {
+								thongBaoStore.display = true;
+								thongBaoStore.status = "warning";
+								thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+							} else {
+								hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
+								hoaDonStore.tongTien = 0;
 
-							hoaDonStore.displayFormThanhToan = true;
+								hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
+									sachDaChon.SoLuong -= sachDaChon.soLuongMua;
+									return sachDaChon;
+								});
+
+								hoaDonStore.listOfSachDaChon.forEach((sach) => {
+									hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
+									hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+								});
+
+								hoaDonStore.displayFormThanhToan = true;
+							}
 						}
 					}
 				}
@@ -149,29 +169,45 @@
 						thongBaoStore.status = "warning";
 						thongBaoStore.message = "Vui lòng chọn ít nhất 1 cuốn sách!";
 					} else {
-						let book = hoaDonStore.listOfSachDaChon.find((book) => {
-							if (book.soLuongMua > book.SoLuong) return book;
+						let khachNo = thuTienStore.listOfPhieuThuTien.find((ptt) => {
+							if (
+								hoTenKhachHang.value == ptt.HoTen &&
+								diaChi.value == ptt.DiaChi &&
+								sdt.value == ptt.DienThoai &&
+								email.value == ptt.Email
+							)
+								if (ptt.SoTienNo > caiDatStore.tienNoToiDa) return ptt;
 						});
 
-						if (book != undefined) {
+						if (khachNo != undefined) {
 							thongBaoStore.display = true;
 							thongBaoStore.status = "warning";
-							thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+							thongBaoStore.message = `Khách này có số tiền nợ vượt quá ${caiDatStore.tienNoToiDa}`;
 						} else {
-							hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
-							hoaDonStore.tongTien = 0;
-
-							hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
-								sachDaChon.SoLuong -= sachDaChon.soLuongMua;
-								return sachDaChon;
+							let book = hoaDonStore.listOfSachDaChon.find((book) => {
+								if (book.soLuongMua > book.SoLuong) return book;
 							});
 
-							hoaDonStore.listOfSachDaChon.forEach((sach) => {
-								hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
-								hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
-							});
+							if (book != undefined) {
+								thongBaoStore.display = true;
+								thongBaoStore.status = "warning";
+								thongBaoStore.message = `Số lượng mua (${book.soLuongMua}) phải nhỏ hơn số lượng tồn (${book.SoLuong})`;
+							} else {
+								hoaDonStore.tongSoLuongCuaCacSachDaChon = 0;
+								hoaDonStore.tongTien = 0;
 
-							hoaDonStore.displayFormGhiNo = true;
+								hoaDonStore.listOfSachDaChon = hoaDonStore.listOfSachDaChon.map((sachDaChon) => {
+									sachDaChon.SoLuong -= sachDaChon.soLuongMua;
+									return sachDaChon;
+								});
+
+								hoaDonStore.listOfSachDaChon.forEach((sach) => {
+									hoaDonStore.tongSoLuongCuaCacSachDaChon += sach.soLuongMua;
+									hoaDonStore.tongTien += sach.soLuongMua * sach.DonGia * (105 / 100);
+								});
+
+								hoaDonStore.displayFormGhiNo = true;
+							}
 						}
 					}
 				}
@@ -179,6 +215,8 @@
 
 			return {
 				hoaDonStore,
+				thongBaoStore,
+				caiDatStore,
 				router,
 				cacSachHienCo,
 				hoTenKhachHang,

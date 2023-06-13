@@ -1,0 +1,11 @@
+B1: Tải MySQL, link hướng dẫn: https://www.youtube.com/watch?v=GwHpIl0vqY4
+B2: ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+B3: flush privileges;
+B4: Clone hoặc download zip project về
+B5: Mở folder project bằng VSCode
+B6: Bật terminal -> cd vào từng folder backend lẫn frontend -> gõ npm install
+B7: cd vào folder backend -> gõ nodemon server.js
+B8: cd vào folder frontend -> gõ npm run dev
+
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

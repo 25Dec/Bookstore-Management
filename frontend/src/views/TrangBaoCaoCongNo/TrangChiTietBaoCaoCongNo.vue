@@ -45,7 +45,7 @@
 			<thead>
 				<tr>
 					<th>No</th>
-					<th>Tên khách hàng</th>
+					<th>Khách hàng</th>
 					<th>Nợ đầu</th>
 					<th>Phát sinh</th>
 					<th>Nợ cuối</th>
@@ -58,12 +58,12 @@
 					class="row"
 				>
 					<td class="no">{{ index + 1 }}</td>
-					<td class="tenKhachHang">
+					<td class="hoTen">
 						{{ row.HoTen }}
 					</td>
-					<td class="noDau">{{ row.NoDau.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
-					<td class="phatSinh">{{ row.PhatSinh.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
-					<td class="noCuoi">{{ row.NoCuoi.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
+					<td class="noDau">{{ row.NoDau }}</td>
+					<td class="phatSinh">{{ row.PhatSinh }}</td>
+					<td class="noCuoi">{{ row.NoCuoi }}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -125,7 +125,7 @@
 		background-color: #e1e5ee;
 	}
 
-	#ChiTietBaoCaoCongNo > table .tenKhachHang {
+	#ChiTietBaoCaoCongNo > table .tenSach {
 		color: #bf8f60;
 	}
 
