@@ -1,6 +1,7 @@
 <script>
 	import { onMounted } from "vue";
 	import { useSachStore } from "../../stores/SachStore";
+	import { useAuthStore } from "../../stores/AuthStore";
 	import Spinner from "../../components/Spinner/Spinner.vue";
 	import FormNhapSach from "../../components/FormNhapSach/FormNhapSach.vue";
 	import FormChinhSuaSach from "../../components/FormChinhSuaSach/FormChinhSuaSach.vue";
@@ -10,6 +11,7 @@
 		components: { Spinner, FormNhapSach, FormChinhSuaSach, FormXoaSach },
 		setup() {
 			let sachStore = useSachStore();
+			let authStore = useAuthStore();
 
 			onMounted(() => {
 				sachStore.getListOfBooks();
@@ -24,7 +26,7 @@
 				return `${day}/${month}/${year}`;
 			};
 
-			return { sachStore, convertDateTime };
+			return { sachStore, authStore, convertDateTime };
 		},
 	};
 </script>
@@ -64,7 +66,7 @@
 					<th>Số lượng</th>
 					<th>Đơn giá</th>
 					<th>Ngày nhập</th>
-					<th>Thao tác</th>
+					<th v-if="authStore.auth.userRight == 'SUPER_ADMIN'">Thao tác</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -80,7 +82,10 @@
 					<td class="quantity">{{ book.SoLuong }}</td>
 					<td class="price">{{ book.DonGia.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
 					<td class="date">{{ convertDateTime(book.NgayNhapSach) }}</td>
-					<td class="modify">
+					<td
+						v-if="authStore.auth.userRight == 'SUPER_ADMIN'"
+						class="modify"
+					>
 						<span
 							class="edit material-icons"
 							@click="

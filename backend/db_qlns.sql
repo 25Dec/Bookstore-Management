@@ -100,7 +100,7 @@ create table CT_BAOCAOCONGNO(
 );
 
 create table KHACHHANG(
-	MaKH int primary key auto_increment,
+	MaKH int primary key,
     HoTen varchar(200),
     DiaChi varchar(200),
     DienThoai varchar(10),

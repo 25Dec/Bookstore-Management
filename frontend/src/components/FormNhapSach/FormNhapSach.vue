@@ -195,7 +195,7 @@
 					v-model.trim="tenTacGia"
 				/>
 			</div>
-			<div>
+			<div v-if="tenSachFromSelectTag == ''">
 				<label for="theLoai">Thể loại</label>
 				<select
 					name="theLoai"
@@ -213,7 +213,7 @@
 					</option>
 				</select>
 				<input
-					v-if="theLoaiFromSelectTag == ''"
+					v-if="theLoaiFromSelectTag == '' && Object.values(sachStore.detailPerBook).length == 0"
 					id="theLoai"
 					required
 					type="text"

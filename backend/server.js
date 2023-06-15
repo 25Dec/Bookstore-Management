@@ -157,7 +157,7 @@ app.post("/trangSach/books/addPhieuNhapSach", (req, res) => {
 			MaTG = results[0].MaTG;
 		} else {
 			MaTG = Math.floor(Math.random() * 99999) + 1;
-			// Thêm tác giả mới vào bảng TACGIA và lấy mã tác giả vừa thêm
+			// Thêm tác giả mới vào bảng TACGIA
 			const insertTacGia = `INSERT INTO TACGIA (MaTG, TenTG) VALUES (${MaTG},'${TenTG}')`;
 			db.query(insertTacGia, (err, result) => {
 				if (err) {
@@ -233,21 +233,22 @@ app.put("/trangSach/books/:id", (req, res) => {
 			return;
 		}
 
-		let maTacGia;
+		let MaTG;
 		if (results.length > 0) {
-			maTacGia = results[0].MaTG;
+			MaTG = results[0].MaTG;
 		} else {
-			// Thêm tác giả mới vào bảng TACGIA và lấy mã tác giả vừa thêm
-			const insertTacGia = `INSERT INTO TACGIA (TenTG) VALUES ('${TenTG}')`;
+			// Thêm tác giả mới vào bảng TACGIA
+			MaTG = Math.floor(Math.random() * 99999) + 1;
+			const insertTacGia = `INSERT INTO TACGIA (MaTG, TenTG) VALUES (${MaTG},'${TenTG}')`;
 			db.query(insertTacGia, (err, result) => {
 				if (err) {
 					console.error("Lỗi thêm tác giả: " + err);
 					return;
 				}
-				maTacGia = result.insertId;
 			});
 		}
 
+		let MaTL;
 		// Thực hiện truy vấn SQL để kiểm tra và lấy mã thể loại
 		const queryTheLoai = `SELECT MaTL FROM THELOAI WHERE TenTL = '${TenTL}'`;
 		db.query(queryTheLoai, (err, results) => {
@@ -255,10 +256,10 @@ app.put("/trangSach/books/:id", (req, res) => {
 				console.error("Lỗi truy vấn: " + err);
 				return;
 			}
-			maTheLoai = results[0].MaTL;
+			MaTL = results[0].MaTL;
 
 			// Thực hiện truy vấn SQL để update thông tin sách
-			const updateSach = `UPDATE SACH SET TenSach = '${TenSach}', MaTG = '${maTacGia}', MaTL = '${maTheLoai}' WHERE MaSach = ${MaSach}`;
+			const updateSach = `UPDATE SACH SET TenSach = '${TenSach}', MaTG = '${MaTG}', MaTL = '${MaTL}' WHERE MaSach = ${MaSach}`;
 			db.query(updateSach, (error) => {
 				if (error) {
 					console.error("Lỗi cập nhật sách: " + error);
@@ -364,22 +365,22 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonThanhToan", (req, res) => {
 			return;
 		}
 
-		let maKhachHang;
+		let MaKH;
 		if (results.length > 0) {
-			maKhachHang = results[0].MaKH;
+			MaKH = results[0].MaKH;
 		} else {
-			// Thêm khách hàng mới vào bảng KHACHHANG và lấy mã khách hàng vừa thêm
-			const insertKhachHang = `INSERT INTO KHACHHANG (HoTen, DiaChi, DienThoai, Email, SoTienNo) VALUES ('${HoTen}', '${DiaChi}','${DienThoai}','${Email}', ${SoTienNo})`;
+			// Thêm khách hàng mới vào bảng KHACHHANG
+			MaKH = Math.floor(Math.random() * 99999) + 1;
+			const insertKhachHang = `INSERT INTO KHACHHANG (MaKH, HoTen, DiaChi, DienThoai, Email, SoTienNo) VALUES (${MaKH},'${HoTen}', '${DiaChi}','${DienThoai}','${Email}', ${SoTienNo})`;
 			db.query(insertKhachHang, (err, result) => {
 				if (err) {
 					console.error("Lỗi thêm khách hàng: " + err);
 					return;
 				}
-				maKhachHang = result.insertId;
 			});
 		}
-		// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${maKhachHang})`;
+		// Thêm hóa đơn mới vào bảng HOADON
+		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(), ${TongTien}, ${SoTienTra}, ${ConLai}, ${MaKH})`;
 		db.query(insertHoaDon, (err, result) => {
 			if (err) {
 				console.error("Lỗi chèn thông tin hóa đơn:", err);
@@ -436,23 +437,23 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 			return;
 		}
 
-		let maKhachHang;
+		let MaKH;
 		if (results.length > 0) {
-			maKhachHang = results[0].MaKH;
+			MaKH = results[0].MaKH;
 		} else {
-			// Thêm khách hàng mới vào bảng KHACHHANG và lấy mã khách hàng vừa thêm
-			const insertKhachHang = `INSERT INTO KHACHHANG (HoTen, DiaChi, DienThoai, Email, SoTienNo) VALUES ('${HoTen}', '${DiaChi}','${DienThoai}','${Email}', ${SoTienNo})`;
+			// Thêm khách hàng mới vào bảng KHACHHANG
+			MaKH = Math.floor(Math.random() * 99999) + 1;
+			const insertKhachHang = `INSERT INTO KHACHHANG (MaKH, HoTen, DiaChi, DienThoai, Email, SoTienNo) VALUES (${MaKH},'${HoTen}', '${DiaChi}','${DienThoai}','${Email}', ${SoTienNo})`;
 			db.query(insertKhachHang, (err, result) => {
 				if (err) {
 					console.error("Lỗi thêm khách hàng: " + err);
 					return;
 				}
-				maKhachHang = result.insertId;
 			});
 		}
 
 		// Thêm hóa đơn mới vào bảng HOADON và lấy mã hóa đơn vừa thêm
-		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(),${TongTien},${SoTienTra},${ConLai}, ${maKhachHang})`;
+		const insertHoaDon = `INSERT INTO HOADON (MaHD, NgayLap, TongTien, SoTienTra, ConLai, MaKH) VALUES (${MaHD}, CURRENT_TIMESTAMP(),${TongTien},${SoTienTra},${ConLai}, ${MaKH})`;
 		db.query(insertHoaDon, (err, result) => {
 			if (err) {
 				console.error("Lỗi chèn thông tin hóa đơn:", err);
@@ -492,7 +493,7 @@ app.post("/trangHoaDon/danhSachHoaDon/addHoaDonGhiNo", (req, res) => {
 						return;
 					}
 
-					const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_TIMESTAMP(),${TongTien}, ${SoTienTra},${ConLai}, ${maKhachHang})`;
+					const insertPhieuThuTien = `INSERT INTO PHIEUTHUTIEN (NgayThuTien, TongTien, SoTienDaThu, ConLai, MaKH) VALUES (CURRENT_TIMESTAMP(),${TongTien}, ${SoTienTra},${ConLai}, ${MaKH})`;
 					db.query(insertPhieuThuTien, (err, result) => {
 						if (err) {
 							console.error("Lỗi thêm phiếu thu tiền nợ: " + err);

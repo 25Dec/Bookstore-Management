@@ -4,6 +4,28 @@ import axios from "axios";
 
 export const useAuthStore = defineStore("AuthStore", {
 	state: () => ({
+		accounts: [
+			{
+				id: 1,
+				loginName: "sadmin",
+				password: "sadmin",
+				displayName: "super admin",
+				email: "sadmin@gmail.com",
+				userRight: "SUPER_ADMIN",
+				firstName: "Nhan",
+				lastName: "Thien",
+			},
+			{
+				id: 2,
+				loginName: "staff",
+				password: "staff",
+				displayName: "staff",
+				email: "staff@gmail.com",
+				userRight: "STAFF",
+				firstName: "Quoc",
+				lastName: "Dat",
+			},
+		],
 		auth: {},
 		isAuthorized: false,
 		loading: false,
@@ -13,19 +35,33 @@ export const useAuthStore = defineStore("AuthStore", {
 		async getAuth(username, password) {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
+
 			try {
-				let res = await axios.post(
-					"https://userbookbackendapi.herokuapp.com/v1/login",
-					JSON.stringify({ loginName: username, password: password }),
-					{
-						headers: { "Content-Type": "application/json" },
+				// let res = await axios.post(
+				// 	"https://userbookbackendapi.herokuapp.com/v1/login",
+				// 	JSON.stringify({ loginName: username, password: password }),
+				// 	{
+				// 		headers: { "Content-Type": "application/json" },
+				// 	}
+				// );
+				this.auth = this.accounts.find((acc) => {
+					if (username == acc.loginName && password == acc.password) {
+						return acc;
 					}
-				);
-				this.auth = res.data;
-				this.isAuthorized = true;
-				thongBaoStore.display = true;
-				thongBaoStore.status = "success";
-				thongBaoStore.message = "Đăng nhập thành công!";
+				});
+
+				if (Object.values(this.auth).length > 0) {
+					this.isAuthorized = true;
+					thongBaoStore.display = true;
+					thongBaoStore.status = "success";
+					thongBaoStore.message = "Đăng nhập thành công!";
+				} else {
+					this.auth = {};
+					this.isAuthorized = false;
+					thongBaoStore.display = true;
+					thongBaoStore.status = "error";
+					thongBaoStore.message = "Đăng nhập thất bại!";
+				}
 			} catch (err) {
 				this.auth = {};
 				this.isAuthorized = false;
@@ -42,16 +78,19 @@ export const useAuthStore = defineStore("AuthStore", {
 		updateAuthorized(data) {
 			this.isAuthorized = data;
 		},
-		async editProfile(newValues) {
+		async editProfile({ firstName, lastName, email }) {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
 			try {
-				await axios.put(`https://userbookbackendapi.herokuapp.com/v1/auth/users/${this.auth.id}`, newValues, {
-					headers: {
-						"Content-Type": "application/json",
-						access_token: this.auth.token,
-					},
-				});
+				// await axios.put(`https://userbookbackendapi.herokuapp.com/v1/auth/users/${this.auth.id}`, newValues, {
+				// 	headers: {
+				// 		"Content-Type": "application/json",
+				// 		access_token: this.auth.token,
+				// 	},
+				// });
+				this.firstName = firstName;
+				this.lastName = lastName;
+				this.email = email;
 				thongBaoStore.display = true;
 				thongBaoStore.status = "success";
 				thongBaoStore.message = "Cập nhật thông tin thành công!";
@@ -65,11 +104,17 @@ export const useAuthStore = defineStore("AuthStore", {
 		},
 		handleLogout() {
 			let thongBaoStore = useThongBaoStore();
-			this.updateAuth({});
-			this.updateAuthorized(false);
-			thongBaoStore.display = true;
-			thongBaoStore.status = "warning";
-			thongBaoStore.message = "Bạn đã đăng xuất";
+
+			if (Object.values(this.auth).length == 0) {
+				this.updateAuth({});
+				this.updateAuthorized(false);
+			} else {
+				this.updateAuth({});
+				this.updateAuthorized(false);
+				thongBaoStore.display = true;
+				thongBaoStore.status = "warning";
+				thongBaoStore.message = "Bạn đã đăng xuất";
+			}
 		},
 	},
 });

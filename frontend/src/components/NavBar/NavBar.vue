@@ -16,14 +16,14 @@
 	<nav id="NavBar">
 		<RouterLink
 			:to="{ name: 'TrangChu' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight == 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> home </span>
 		</RouterLink>
 
 		<RouterLink
 			:to="{ name: 'TrangSach' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> auto_stories </span>
 		</RouterLink>
@@ -34,35 +34,35 @@
 
 		<RouterLink
 			:to="{ name: 'TrangHoaDon' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> receipt_long </span>
 		</RouterLink>
 
 		<RouterLink
 			:to="{ name: 'TrangThuTien' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> paid </span>
 		</RouterLink>
 
 		<RouterLink
 			:to="{ name: 'TrangBaoCaoTon' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> assessment </span>
 		</RouterLink>
 
 		<RouterLink
 			:to="{ name: 'TrangBaoCaoCongNo' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> request_page </span>
 		</RouterLink>
 
 		<RouterLink
 			:to="{ name: 'TrangCaiDat' }"
-			v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+			v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 		>
 			<span class="material-icons"> settings </span>
 		</RouterLink>
@@ -77,7 +77,7 @@
 		>
 			<span
 				class="material-icons"
-				v-if="authStore.auth.userRight === 'SUPER_ADMIN'"
+				v-if="authStore.auth.userRight === 'SUPER_ADMIN' || authStore.auth.userRight == 'STAFF'"
 			>
 				logout
 			</span>

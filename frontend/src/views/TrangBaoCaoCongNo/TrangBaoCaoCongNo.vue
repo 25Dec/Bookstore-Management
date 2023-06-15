@@ -37,7 +37,7 @@
 				class="material-icons"
 				@click="
 					() => {
-						baoCaoCongNo.displayAddForm = true;
+						baoCaoCongNoStore.displayAddForm = true;
 					}
 				"
 			>
@@ -101,8 +101,8 @@
 		>
 			Chưa có dữ liệu
 		</p>
-		<FormTaoBaoCaoTon v-if="baoCaoCongNoStore.displayAddForm" />
-		<FormXoaBaoCaoTon v-if="baoCaoCongNoStore.displayDeleteForm" />
+		<FormTaoBaoCaoCongNo v-if="baoCaoCongNoStore.displayAddForm" />
+		<FormXoaBaoCaoCongNo v-if="baoCaoCongNoStore.displayDeleteForm" />
 	</div>
 </template>
 

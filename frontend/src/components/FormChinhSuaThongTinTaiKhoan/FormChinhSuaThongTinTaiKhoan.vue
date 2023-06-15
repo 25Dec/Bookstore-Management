@@ -18,7 +18,15 @@
 				}
 			};
 
-			let handleSubmit = () => {};
+			let handleSubmit = () => {
+				let newValues = {
+					firstName: firstName.value,
+					lastName: lastName.value,
+					email: email.value,
+				};
+				authStore.editProfile(newValues);
+				caiDatStore.displayEditForm = false;
+			};
 
 			return { authStore, caiDatStore, EditProfile, firstName, lastName, email, toggleEditProfilePopup, handleSubmit };
 		},

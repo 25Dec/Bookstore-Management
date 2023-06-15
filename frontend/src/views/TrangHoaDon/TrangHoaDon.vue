@@ -1,6 +1,7 @@
 <script>
 	import { onMounted } from "vue";
 	import { useHoaDonStore } from "../../stores/HoaDonStore";
+	import { useAuthStore } from "../../stores/AuthStore";
 	import Spinner from "../../components/Spinner/Spinner.vue";
 	import FormXoaHoaDon from "../../components/FormXoaHoaDon/FormXoaHoaDon.vue";
 
@@ -8,6 +9,7 @@
 		components: { Spinner, FormXoaHoaDon },
 		setup() {
 			let hoaDonStore = useHoaDonStore();
+			let authStore = useAuthStore();
 
 			onMounted(() => {
 				hoaDonStore.getListOfHoaDon();
@@ -21,7 +23,7 @@
 				return `${day}/${month}/${year}`;
 			};
 
-			return { hoaDonStore, convertDateTime };
+			return { hoaDonStore, authStore, convertDateTime };
 		},
 	};
 </script>
@@ -62,7 +64,7 @@
 					<th>Số tiền đã thu</th>
 					<th>Còn lại</th>
 					<th>Ngày lập</th>
-					<!-- <th>Thao tác</th> -->
+					<th v-if="authStore.auth.userRight == 'SUPER_ADMIN'">Thao tác</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -93,7 +95,10 @@
 					</td>
 					<td class="conLai">{{ hoaDon.ConLai.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}</td>
 					<td class="ngayLap">{{ convertDateTime(hoaDon.NgayLap) }}</td>
-					<!-- <td class="modify">
+					<td
+						class="modify"
+						v-if="authStore.auth.userRight == 'SUPER_ADMIN'"
+					>
 						<span
 							class="delete material-icons"
 							@click="
@@ -105,7 +110,7 @@
 						>
 							delete
 						</span>
-					</td> -->
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -115,7 +120,7 @@
 		>
 			Chưa có dữ liệu
 		</p>
-		<!-- <FormXoaHoaDon v-if="hoaDonStore.displayDeleteForm" /> -->
+		<FormXoaHoaDon v-if="hoaDonStore.displayDeleteForm" />
 	</div>
 </template>
 

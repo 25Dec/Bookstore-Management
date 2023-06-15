@@ -14,14 +14,14 @@
 			let handleSubmit = async () => {
 				await authStore.getAuth(username.value, password.value);
 
-				username.value = "";
-				password.value = "";
-
-				if (Object.keys(authStore.auth).length !== 0) {
+				if (Object.values(authStore.auth).length >= 0) {
 					router.push({ name: "TrangChu" });
 				} else {
 					router.push({ name: "TrangDangNhap" });
 				}
+
+				username.value = "";
+				password.value = "";
 			};
 
 			return { SignIn, username, password, handleSubmit };

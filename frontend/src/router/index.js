@@ -14,7 +14,7 @@ import TrangBaoCaoCongNo from "../views/TrangBaoCaoCongNo/TrangBaoCaoCongNo.vue"
 import TrangChiTietBaoCaoCongNo from "../views/TrangBaoCaoCongNo/TrangChiTietBaoCaoCongNo.vue";
 import TrangCaiDat from "../views/TrangCaiDat/TrangCaiDat.vue";
 
-const roles = ["SUPER_ADMIN", "ADMIN"];
+const roles = ["SUPER_ADMIN", "STAFF"];
 
 const requireAuth = (to, from, next) => {
 	let authStore = useAuthStore();
