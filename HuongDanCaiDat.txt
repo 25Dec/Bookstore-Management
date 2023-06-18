@@ -1,5 +1,5 @@
 B1: Tải MySQL, link hướng dẫn: https://www.youtube.com/watch?v=GwHpIl0vqY4
-B2: ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+B2: ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourPassword';
 B3: flush privileges;
 B4: Clone hoặc download zip project về
 B5: Mở folder project bằng VSCode
