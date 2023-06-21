@@ -37,13 +37,6 @@ export const useAuthStore = defineStore("AuthStore", {
 			this.loading = true;
 
 			try {
-				// let res = await axios.post(
-				// 	"https://userbookbackendapi.herokuapp.com/v1/login",
-				// 	JSON.stringify({ loginName: username, password: password }),
-				// 	{
-				// 		headers: { "Content-Type": "application/json" },
-				// 	}
-				// );
 				this.auth = this.accounts.find((acc) => {
 					if (username == acc.loginName && password == acc.password) {
 						return acc;
@@ -82,12 +75,7 @@ export const useAuthStore = defineStore("AuthStore", {
 			let thongBaoStore = useThongBaoStore();
 			this.loading = true;
 			try {
-				// await axios.put(`https://userbookbackendapi.herokuapp.com/v1/auth/users/${this.auth.id}`, newValues, {
-				// 	headers: {
-				// 		"Content-Type": "application/json",
-				// 		access_token: this.auth.token,
-				// 	},
-				// });
+
 				this.firstName = firstName;
 				this.lastName = lastName;
 				this.email = email;

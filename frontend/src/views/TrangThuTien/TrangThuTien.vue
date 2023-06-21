@@ -1,43 +1,43 @@
 <script>
-	import { onMounted } from "vue";
-	import Spinner from "../../components/Spinner/Spinner.vue";
-	import FormLapPhieuThuTien from "../../components/FormLapPhieuThuTien/FormLapPhieuThuTien.vue";
-	import FormXoaPhieuThuTien from "../../components/FormXoaPhieuThuTien/FormXoaPhieuThuTien.vue";
-	import { useThuTienStore } from "../../stores/ThuTienStore";
-	import { useThongBaoStore } from "../../stores/ThongBaoStore";
+import { onMounted } from "vue";
+import Spinner from "../../components/Spinner/Spinner.vue";
+import FormLapPhieuThuTien from "../../components/FormLapPhieuThuTien/FormLapPhieuThuTien.vue";
+import FormXoaPhieuThuTien from "../../components/FormXoaPhieuThuTien/FormXoaPhieuThuTien.vue";
+import { useThuTienStore } from "../../stores/ThuTienStore";
+import { useThongBaoStore } from "../../stores/ThongBaoStore";
 
-	export default {
-		components: { Spinner, FormLapPhieuThuTien, FormXoaPhieuThuTien },
-		setup() {
-			let thuTienStore = useThuTienStore();
-			let thongBaoStore = useThongBaoStore();
+export default {
+	components: { Spinner, FormLapPhieuThuTien, FormXoaPhieuThuTien },
+	setup() {
+		let thuTienStore = useThuTienStore();
+		let thongBaoStore = useThongBaoStore();
 
-			onMounted(() => {
-				thuTienStore.getListOfPhieuThuTien();
-			});
+		onMounted(() => {
+			thuTienStore.getListOfPhieuThuTien();
+		});
 
-			let shortenEmail = (email) => {
-				if (email.length > 28) {
-					let atIndex = email.indexOf("@");
+		let shortenEmail = (email) => {
+			if (email.length > 28) {
+				let atIndex = email.indexOf("@");
 
-					if (atIndex > 0) {
-						let username = email.substring(0, atIndex);
-						let domain = email.substring(atIndex);
+				if (atIndex > 0) {
+					let username = email.substring(0, atIndex);
+					let domain = email.substring(atIndex);
 
-						if (username.length > 5) {
-							username = username.substring(0, 5) + "...";
-						}
-
-						return username + domain;
+					if (username.length > 5) {
+						username = username.substring(0, 5) + "...";
 					}
-					return email;
+
+					return username + domain;
 				}
 				return email;
-			};
+			}
+			return email;
+		};
 
-			return { thuTienStore, thongBaoStore, shortenEmail };
-		},
-	};
+		return { thuTienStore, thongBaoStore, shortenEmail };
+	},
+};
 </script>
 
 <template>
@@ -49,7 +49,7 @@
 		v-else
 		id="TrangThuTien"
 	>
-		<h1 class="title">Trang thu tiền</h1>
+		<h1 class="title">Trang thu tiền nợ</h1>
 		<table>
 			<thead>
 				<tr>
@@ -77,13 +77,28 @@
 					<td class="email">{{ shortenEmail(phieuThuTien.Email) }}</td>
 					<td class="sdt">{{ phieuThuTien.DienThoai }}</td>
 					<td class="tongNo">
-						{{ phieuThuTien.TongTien.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}
+						{{
+							phieuThuTien.TongTien.toLocaleString("vi-VN", {
+								style: "currency",
+								currency: "VND",
+							})
+						}}
 					</td>
 					<td class="soTienDaThu">
-						{{ phieuThuTien.SoTienDaThu.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}
+						{{
+							phieuThuTien.SoTienDaThu.toLocaleString("vi-VN", {
+								style: "currency",
+								currency: "VND",
+							})
+						}}
 					</td>
 					<td class="conLai">
-						{{ phieuThuTien.ConLai.toLocaleString("vi-VN", { style: "currency", currency: "VND" }) }}
+						{{
+							phieuThuTien.ConLai.toLocaleString("vi-VN", {
+								style: "currency",
+								currency: "VND",
+							})
+						}}
 					</td>
 					<td class="status">
 						<span
@@ -139,82 +154,82 @@
 </template>
 
 <style scoped>
-	#TrangThuTien {
-		width: 100vw;
-		height: max-content;
-		background: #f9fbff;
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: center;
-		padding-bottom: 5rem;
-	}
-	#TrangThuTien .title {
-		margin: 1.5rem 0;
-		color: #bf8f60;
-		text-transform: uppercase;
-	}
+#TrangThuTien {
+	width: 100vw;
+	height: max-content;
+	background: #f9fbff;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	padding-bottom: 5rem;
+}
+#TrangThuTien .title {
+	margin: 1.5rem 0;
+	color: #bf8f60;
+	text-transform: uppercase;
+}
 
-	#TrangThuTien > table {
-		width: 90%;
-		border-collapse: collapse;
-		box-shadow: 0 5px 10px #e1e5ee;
-		background-color: white;
-		text-align: center;
-	}
+#TrangThuTien > table {
+	width: 90%;
+	border-collapse: collapse;
+	box-shadow: 0 5px 10px #e1e5ee;
+	background-color: white;
+	text-align: center;
+}
 
-	#TrangThuTien > table thead {
-		box-shadow: 0 5px 10px #e1e5ee;
-	}
+#TrangThuTien > table thead {
+	box-shadow: 0 5px 10px #e1e5ee;
+}
 
-	#TrangThuTien > table th {
-		padding: 1rem;
-		text-transform: uppercase;
-		letter-spacing: 0.1rem;
-		font-size: 0.7rem;
-		font-weight: 900;
-	}
+#TrangThuTien > table th {
+	padding: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1rem;
+	font-size: 0.7rem;
+	font-weight: 900;
+}
 
-	#TrangThuTien > table td {
-		padding: 1rem 2rem;
-	}
+#TrangThuTien > table td {
+	padding: 1rem 2rem;
+}
 
-	#TrangThuTien table tbody tr:hover {
-		background-color: #e1e5ee;
-	}
+#TrangThuTien table tbody tr:hover {
+	background-color: #e1e5ee;
+}
 
-	#TrangThuTien > table .hoTenKhachHang {
-		color: #bf8f60;
-	}
+#TrangThuTien > table .hoTenKhachHang {
+	color: #bf8f60;
+}
 
-	#TrangThuTien > table a:hover {
-		text-decoration: underline;
-	}
+#TrangThuTien > table a:hover {
+	text-decoration: underline;
+}
 
-	#TrangThuTien > table .modify .material-icons {
-		color: rgba(85, 85, 85);
-		font-size: 16px;
-		cursor: pointer;
-	}
+#TrangThuTien > table .modify .material-icons {
+	color: rgba(85, 85, 85);
+	font-size: 16px;
+	cursor: pointer;
+}
 
-	#TrangThuTien > table .modify .material-icons:hover {
-		color: #e26e70;
-	}
+#TrangThuTien > table .modify .material-icons:hover {
+	color: #e26e70;
+}
 
-	#TrangThuTien > table tr:nth-child(even) {
-		background-color: #f4f6fb;
-	}
+#TrangThuTien > table tr:nth-child(even) {
+	background-color: #f4f6fb;
+}
 
-	#TrangThuTien > table .status .conNo {
-		padding: 0.15rem 0.25rem;
-		background-color: #f8d7da;
-		color: #58151c;
-		border-radius: 5px;
-	}
-	#TrangThuTien > table .status .hetNo {
-		padding: 0.25rem 0.5rem;
-		background-color: #d1e7dd;
-		color: #0a3622;
-		border-radius: 5px;
-	}
+#TrangThuTien > table .status .conNo {
+	padding: 0.15rem 0.25rem;
+	background-color: #f8d7da;
+	color: #58151c;
+	border-radius: 5px;
+}
+#TrangThuTien > table .status .hetNo {
+	padding: 0.25rem 0.5rem;
+	background-color: #d1e7dd;
+	color: #0a3622;
+	border-radius: 5px;
+}
 </style>
